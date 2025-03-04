@@ -1,22 +1,31 @@
-import pandas as pd
-from models import Asistente, Gerente, JefeDeArea, PersonalTecnico
+from models import Gerente, JefeArea, Asistente, Tecnico
 
 def crear_empleados():
-    gerente = Gerente("Carlos Pérez")
-    jefe_marketing = JefeDeArea("Ana Gómez", "Marketing", gerente.nombre)
-    jefe_sistemas = JefeDeArea("Juan Ruiz", "Sistemas", gerente.nombre)
-    asistente1 = Asistente("Pedro López", jefe_marketing.nombre)
-    asistente2 = Asistente("Luis Fernández", jefe_sistemas.nombre)
-    tecnico1 = PersonalTecnico("Sofía Díaz", 3, jefe_marketing.nombre)
-    tecnico2 = PersonalTecnico("Martín Chávez", 5, jefe_sistemas.nombre)
-    
-    jefe_marketing.agregar_asistente(asistente1)
-    jefe_marketing.agregar_tecnico(tecnico1)
-    jefe_sistemas.agregar_asistente(asistente2)
-    jefe_sistemas.agregar_tecnico(tecnico2)
-    
-    return [gerente, jefe_marketing, jefe_sistemas, asistente1, asistente2, tecnico1, tecnico2]
+    # Creando un gerente
+    gerente = Gerente("Carlos", "Ramírez")
 
-def formatear_datos(empleados):
-    data = [{"Nombre": e.nombre, "Puesto": e.puesto, "Experiencia": e.experiencia or "N/A", "Jefe": e.get_jefe_inmediato(), "Estado": e.get_estado()} for e in empleados]
-    return pd.DataFrame(data)
+    # Creando jefes de área
+    jefes = [
+        JefeArea("María", "López", "Marketing", gerente),
+        JefeArea("Jorge", "Fernández", "Sistemas", gerente),
+        JefeArea("Ana", "González", "Producción", gerente),
+        JefeArea("Luis", "Torres", "Logística", gerente)
+    ]
+
+    for jefe in jefes:
+        gerente.agregar_jefe_area(jefe)
+
+    # Creando asistentes y técnicos
+    empleados = []
+    for jefe in jefes:
+        for i in range(2):  # Máximo 2 asistentes por área
+            empleado = Asistente(f"Asistente{i+1}", jefe.area, jefe)
+            empleados.append(empleado)
+            jefe.agregar_subordinado(empleado)
+        
+        for i in range(3):  # Máximo 5 técnicos por área
+            empleado = Tecnico(f"Tecnico{i+1}", jefe.area, i+1, jefe)
+            empleados.append(empleado)
+            jefe.agregar_subordinado(empleado)
+
+    return gerente, jefes, empleados
