@@ -1,7 +1,6 @@
 import streamlit as st
 from src.utils import crear_empleados
 
-# Crear los empleados
 gerente, jefes, empleados = crear_empleados()
 
 st.title("Sistema de Gestión de Recursos Humanos")
