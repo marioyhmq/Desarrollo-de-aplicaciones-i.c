@@ -1,14 +1,13 @@
 import streamlit as st
-from utils import crear_empleados
+from src.utils import crear_empleados
 
 # Crear los empleados
 gerente, jefes, empleados = crear_empleados()
 
-# UI con Streamlit
 st.title("Sistema de Gestión de Recursos Humanos")
 
 st.header("Gerente")
-st.write(f"👔 {gerente.get_resumen()} - Estado: {gerente.get_estado()}")
+st.write(f"{gerente.get_resumen()} - Estado: {gerente.get_estado()}")
 
 st.header("Jefes de Área")
 for jefe in jefes:
